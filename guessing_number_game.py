@@ -50,7 +50,9 @@ def get_yes_no(prompt):
         if ans in ("yes", "no"):
             return ans
         print("❌ Invalid choice. Please type 'yes' or 'no'.")
+
 #-------------------------------------------------------------------------#
+
 def get_user_guess():
     """
     Ask the player to guess a number between 1 and 10.
@@ -69,6 +71,71 @@ def get_user_guess():
             print("❌ Please enter a number between 1 and 10.")
         except ValueError:
             print("❌ Invalid input. Please enter a number.")
+            
+#==========================================================================#
+
+def progress_bar(streak, max_streak=5, length=10):
+    """
+    Display a progress bar for the win streak.
+
+    Args:
+        streak (int): Current number of consecutive wins.
+        max_streak (int, optional): Required streak to win the game. Defaults to 5.
+        length (int, optional): Length of the bar in characters. Defaults to 10.
+
+    Returns:
+        str: A formatted progress bar string (e.g. [███-------] 3/5).
+    """
+    progress = min(streak, max_streak) / max_streak
+    filled = int(progress * length)
+    bar = "█" * filled + "-" * (length - filled)
+    return f"[{bar}] {streak}/{max_streak}"
+
+#==============================================================================================================#
+
+def show_status(info):
+    """
+    Show the current or final game status.
+
+    Args:
+        info (dict): Contains game information such as:
+            - score (int): Total correct guesses.
+            - total_attempts (int): Total guesses across all rounds.
+            - win_streak (int): Current consecutive wins.
+            - final (bool): Whether to show final status.
+            - reason (str): Reason for ending the game.
+              Options: "win5", "lost", "exit".
+    """
+    if info.get("final", False):
+        reason = info.get("reason", "exit")
+
+        if reason == "win5":
+            # Case: Player won 5 games in a row
+            print("🏆🔥 Congratulations! You won 5 games in a row!!")
+            print(f"Final score: {info.get('score', 0)}, Total attempts: {info.get('total_attempts', 0)}")
+            print("👋 Thanks for playing, you're a champion!")
+
+        elif reason == "lost":
+            # Case: Player failed a round
+            print("💀 Game Over: You lost the last round.")
+            print(f"Final score: {info.get('score', 0)}, Total attempts: {info.get('total_attempts', 0)}")
+            if info.get("win_streak", 0) < 5:
+                print("🔥 Win Streak Progress:", progress_bar(info.get("win_streak", 0)))
+            print("👋 Better luck next time!")
+
+        elif reason == "exit":
+            # Case: Player quit voluntarily
+            print("👋 You exited the game.")
+            if info.get("total_attempts", 0) > 0:
+                print(f"Final score: {info.get('score', 0)}, Total attempts: {info.get('total_attempts', 0)}")
+                if info.get("win_streak", 0) < 5:
+                    print("🔥 Win Streak Progress:", progress_bar(info.get("win_streak", 0)))
+
+    else:
+        # Ongoing game status
+        print(f"📊 Score so far: {info.get('score', 0)}")
+        print("🔥 Win Streak Progress:", progress_bar(info.get("win_streak", 0)))
+#==============================================================================================================#
 
 # ---- Main Game Flow ----
 print("🎮 Welcome to the Guessing Number Game!")
