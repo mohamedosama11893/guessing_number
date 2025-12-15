@@ -33,6 +33,42 @@ total_attempts = 0     # Total number of guesses across all rounds
 win_streak = 0         # Number of consecutive round wins
 
 # --- Game Functions ---
+def get_yes_no(prompt):
+    """
+    Ask the player a Yes/No question.
+
+    Keeps looping until the input is either 'yes' or 'no'.
+
+    Args:
+        prompt (str): The question displayed to the player.
+
+    Returns:
+        str: Either "yes" or "no".
+    """
+    while True:
+        ans = input(prompt).strip().lower()
+        if ans in ("yes", "no"):
+            return ans
+        print("❌ Invalid choice. Please type 'yes' or 'no'.")
+#-------------------------------------------------------------------------#
+def get_user_guess():
+    """
+    Ask the player to guess a number between 1 and 10.
+
+    Keeps looping until the user provides a valid integer
+    within the range [1, 10].
+
+    Returns:
+        int: The valid guess entered by the user.
+    """
+    while True:
+        try:
+            guess = int(input("Guess a number between 1 and 10: "))
+            if 1 <= guess <= 10:
+                return guess
+            print("❌ Please enter a number between 1 and 10.")
+        except ValueError:
+            print("❌ Invalid input. Please enter a number.")
 
 # ---- Main Game Flow ----
 print("🎮 Welcome to the Guessing Number Game!")
